@@ -72,6 +72,15 @@ RSpec.describe SalesController, :type => :controller do
         expect(assigns(:sales)).to be_a(Array)
       end
 
+      it "correctly stores the date" do
+        post :create, valid_parameters
+        first_sale = assigns(:sales).first
+        first_sale_date = first_sale.date
+        
+        expect(first_sale_date.strftime('%H%M')).to eq "0700"
+        expect(first_sale_date.strftime('%Y%m%d')).to eq "20140103"
+      end
+
       it "hashes and assigns the password.." do
         post :create, valid_parameters
         first_sale = assigns(:sales).first
