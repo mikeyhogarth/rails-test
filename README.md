@@ -1,6 +1,9 @@
 # Rails Test
 
-[![Build Status](https://travis-ci.org/nickpellant/rails-test.svg?branch=master)](https://travis-ci.org/nickpellant/rails-test) [![Coverage Status](https://img.shields.io/coveralls/nickpellant/rails-test.svg)](https://coveralls.io/r/nickpellant/rails-test) [![Code Climate](https://codeclimate.com/github/nickpellant/rails-test.png)](https://codeclimate.com/github/nickpellant/rails-test)
+[![Build Status](https://travis-ci.org/mikeyhogarth/rails-test.svg?branch=master)](https://travis-ci.org/mikeyhogarth/rails-test)
+[![Coverage Status](https://coveralls.io/repos/mikeyhogarth/rails-test/badge.svg)](https://coveralls.io/r/mikeyhogarth/rails-test)
+[![Code Climate](https://codeclimate.com/github/mikeyhogarth/rails-test/badges/gpa.svg)](https://codeclimate.com/github/mikeyhogarth/rails-test)
+
 
 This Rails application is a foundation for the following Ruby on Rails technical test. To start the test please fork this repository and follow the instructions below.
 
