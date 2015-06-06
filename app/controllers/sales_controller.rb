@@ -50,23 +50,28 @@ class SalesController < ApplicationController
   # for an array of sales
   #
   def sale_params
-    password = PasswordHasher.hash(params[:password]) if params[:password]
 
     if params[:sales]
       params.require(:sales).each do |s|
-        s[:date] = DateTimeAdapter.convert(s[:time],s[:date])
-        s[:hashed_password] = password
-        s.delete(:time)
+        massage_params(s)
       end
       return params.permit(sales: [:date, :code, :value, :hashed_password])[:sales]
     else
       params.require(:sale) do |s|
-        s[:date] = DateTimeAdapter.convert(s[:time],s[:date])
-        s[:hashed_password] = password
-        s.delete(:time)
+        massage_params(s)
       end
       return params.permit(:date, :code, :value, :hashed_password)
     end
+  end
+
+  #
+  # massage_params
+  #
+  def massage_params(s)
+    password = PasswordHasher.hash(params[:password]) if params[:password]
+    s[:date] = DateTimeAdapter.convert(s[:time],s[:date])
+    s[:hashed_password] = password
+    s.delete(:time)
   end
 
 
