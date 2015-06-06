@@ -2,11 +2,14 @@ require 'rails_helper'
 
 RSpec.describe SalesController, :type => :controller do
 
+  CORRECT_PASSWORD = "a_password"
+
   #
   # Valid parameters
   # 
   let(:valid_parameters) do
     {
+      password: CORRECT_PASSWORD,
       sales: [
         {
           date: '20140103',
@@ -64,15 +67,21 @@ RSpec.describe SalesController, :type => :controller do
         }.to change(Sale, :count).by(2)
       end
 
-      it "assigns a newly created sale as @sale" do
+      it "assigns a newly created sale as @sales" do
         post :create, valid_parameters
         expect(assigns(:sales)).to be_a(Array)
+      end
+
+      it "hashes and assigns the password.." do
+        post :create, valid_parameters
+        first_sale = assigns(:sales).first
+        expect(first_sale.hashed_password).not_to be_blank
+        expect(first_sale.hashed_password).not_to eq CORRECT_PASSWORD
       end
 
       it "responds with JSON" do
         post :create, valid_parameters
         parsed_response = JSON.parse(response.body)
-
         expect(parsed_response["data"].length).to eq 2
       end
 
