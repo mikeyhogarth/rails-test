@@ -38,7 +38,8 @@ class SalesController < ApplicationController
   private
 
   def set_sale
-    @sale = Sale.find(params[:id])
+    find_sale_secure = FindSaleSecure.new(PasswordHasher)
+    @sale = find_sale_secure.find(params[:id], params[:password])
   end
 
 
