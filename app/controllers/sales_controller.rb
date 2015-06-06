@@ -25,7 +25,7 @@ class SalesController < ApplicationController
   # DELETE /sales/1.json
   def destroy
     @sale.destroy
-    format.json { head :no_content }
+    head :no_content
   end
 
 
