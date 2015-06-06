@@ -38,12 +38,6 @@ RSpec.describe SalesController, :type => :controller do
     }
   end
 
-  let(:invalid_attributes) {
-    {
-      foo: :bar
-    }
-  }
-
 
   #
   # SHOW
@@ -74,6 +68,14 @@ RSpec.describe SalesController, :type => :controller do
         post :create, valid_parameters
         expect(assigns(:sales)).to be_a(Array)
       end
+
+      it "responds with JSON" do
+        post :create, valid_parameters
+        parsed_response = JSON.parse(response.body)
+
+        expect(parsed_response["data"].length).to eq 2
+      end
+
     end
 
     describe "with invalid params" do

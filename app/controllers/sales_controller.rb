@@ -1,10 +1,11 @@
 class SalesController < ApplicationController
-  before_action :set_sale, only: [:show, :edit, :update, :destroy]
+  before_action :set_sale, only: [:show, :destroy]
 
 
   # GET /sales/1
   # GET /sales/1.json
   def show
+    render json: { data: @sale }
   end
 
 
@@ -14,9 +15,9 @@ class SalesController < ApplicationController
     Sale.transaction do 
       begin
         @sales = Sale.create!(sale_params)
-        render json: @sales, status: :created, location: @sale 
+        render json: { data: @sales }, status: :created, location: @sale 
       rescue ActiveRecord::RecordInvalid => invalid
-        render json: invalid.record.errors.full_messages, status: :unprocessable_entity 
+        render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity 
       end
     end
   end
@@ -30,19 +31,28 @@ class SalesController < ApplicationController
   end
 
 
+  #
+  # END OF PUBLIC INTERFACE
+  #
+
   private
 
   def set_sale
     @sale = Sale.find(params[:id])
   end
 
+
+  #
+  # sale_params
+  #
+  # Converts incoming parameters into appropriate attributes
+  # for an array of sales
+  #
   def sale_params
     params.require(:sales).each do |s|
-      s.permit(:date, :code, :value, :hashed_password)
+      s[:date] = DateTimeAdapter.convert(s[:time],s[:date])
+      s.delete(:time)
     end
-    
-    params[:date] = DateTimeAdapter.convert(params[:time],params[:date])
-    params.delete(:time)
-
+    params.permit(sales: [:date, :code, :value])[:sales]
   end
 end
