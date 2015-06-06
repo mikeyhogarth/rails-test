@@ -24,6 +24,12 @@ RSpec.describe SalesController, :type => :controller do
     }
   end
 
+  let(:invalid_parameters) {
+    {
+      value: 1.00
+    }
+  }
+
   let(:valid_attributes) do
     { 
       date: DateTime.now,
@@ -32,8 +38,10 @@ RSpec.describe SalesController, :type => :controller do
     }
   end
 
-  let(:invalid_parameters) {
-    skip("No instruction given about what is valid/invalid")
+  let(:invalid_attributes) {
+    {
+      foo: :bar
+    }
   }
 
 
@@ -59,20 +67,20 @@ RSpec.describe SalesController, :type => :controller do
       it "creates a new Sale" do
         expect {
           post :create, valid_parameters 
-        }.to change(Sale, :count).by(1)
+        }.to change(Sale, :count).by(2)
       end
 
       it "assigns a newly created sale as @sale" do
         post :create, valid_parameters
-        expect(assigns(:sale)).to be_a(Sale)
-        expect(assigns(:sale)).to be_persisted
+        expect(assigns(:sales)).to be_a(Array)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved sale as @sale" do
-        post :create, invalid_parameters
-        expect(assigns(:sale)).to be_a_new(Sale)
+        expect {
+          post :create, invalid_parameters
+        }.to raise_error ActionController::ParameterMissing
       end
     end
   end

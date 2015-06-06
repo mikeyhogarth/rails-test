@@ -11,12 +11,13 @@ class SalesController < ApplicationController
   # POST /sales
   # POST /sales.json
   def create
-    @sale = Sale.new(sale_params)
-
-    if @sale.save
-      render :show, status: :created, location: @sale 
-    else
-      render json: @sale.errors, status: :unprocessable_entity 
+    Sale.transaction do 
+      begin
+        @sales = Sale.create!(sale_params)
+        render json: @sales, status: :created, location: @sale 
+      rescue ActiveRecord::RecordInvalid => invalid
+        render json: invalid.record.errors.full_messages, status: :unprocessable_entity 
+      end
     end
   end
 
@@ -36,6 +37,12 @@ class SalesController < ApplicationController
   end
 
   def sale_params
-    params.require(:sale).permit(:date, :code, :value, :hashed_password)
+    params.require(:sales).each do |s|
+      s.permit(:date, :code, :value, :hashed_password)
+    end
+    
+    params[:date] = DateTimeAdapter.convert(params[:time],params[:date])
+    params.delete(:time)
+
   end
 end
