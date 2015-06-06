@@ -32,7 +32,7 @@ RSpec.describe SalesController, :type => :controller do
     }
   end
 
-  let(:invalid_attributes) {
+  let(:invalid_parameters) {
     skip("No instruction given about what is valid/invalid")
   }
 
@@ -58,12 +58,12 @@ RSpec.describe SalesController, :type => :controller do
     describe "with valid params" do
       it "creates a new Sale" do
         expect {
-          post :create, {:sale => valid_attributes}
+          post :create, valid_parameters 
         }.to change(Sale, :count).by(1)
       end
 
       it "assigns a newly created sale as @sale" do
-        post :create, {:sale => valid_attributes}
+        post :create, valid_parameters
         expect(assigns(:sale)).to be_a(Sale)
         expect(assigns(:sale)).to be_persisted
       end
@@ -71,7 +71,7 @@ RSpec.describe SalesController, :type => :controller do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved sale as @sale" do
-        post :create, {:sale => invalid_attributes}
+        post :create, invalid_parameters
         expect(assigns(:sale)).to be_a_new(Sale)
       end
     end
