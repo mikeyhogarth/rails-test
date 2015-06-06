@@ -27,6 +27,19 @@ RSpec.describe SalesController, :type => :controller do
     }
   end
 
+
+  let(:valid_parameters_singular) do
+    {
+      password: CORRECT_PASSWORD,
+      sale: {
+        date: '20140103',
+        time: '0700',
+        code: 'FL',
+        value: '2.00'
+      }
+    }
+  end
+
   let(:invalid_parameters) {
     {
       value: 1.00
@@ -61,14 +74,22 @@ RSpec.describe SalesController, :type => :controller do
 
   describe "POST create" do
     describe "with valid params" do
-      it "creates a new Sale" do
+
+      it "creates a new set of Sales" do
         expect {
           post :create, valid_parameters 
         }.to change(Sale, :count).by(2)
       end
 
-      it "assigns a newly created sale as @sales" do
+      it "assigns a newly created sales as @sales" do
         post :create, valid_parameters
+        expect(assigns(:sales)).to be_a(Array)
+      end
+
+      it "also works for singular resources" do
+        expect {
+          post :create, valid_parameters_singular
+        }.to change(Sale, :count).by(1)
         expect(assigns(:sales)).to be_a(Array)
       end
 

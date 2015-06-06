@@ -14,7 +14,7 @@ class SalesController < ApplicationController
   def create
     Sale.transaction do 
       begin
-        @sales = Sale.create!(sale_params)
+        @sales = [*Sale.create!(sale_params)]
         render json: { data: @sales }, status: :created
       rescue ActiveRecord::RecordInvalid => invalid
         render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity 
@@ -52,12 +52,21 @@ class SalesController < ApplicationController
   def sale_params
     password = PasswordHasher.hash(params[:password]) if params[:password]
 
-    params.require(:sales).each do |s|
-      s[:date] = DateTimeAdapter.convert(s[:time],s[:date])
-      s[:hashed_password] = password
-      s.delete(:time)
+    if params[:sales]
+      params.require(:sales).each do |s|
+        s[:date] = DateTimeAdapter.convert(s[:time],s[:date])
+        s[:hashed_password] = password
+        s.delete(:time)
+      end
+      return params.permit(sales: [:date, :code, :value, :hashed_password])[:sales]
+    else
+      params.require(:sale) do |s|
+        s[:date] = DateTimeAdapter.convert(s[:time],s[:date])
+        s[:hashed_password] = password
+        s.delete(:time)
+      end
+      return params.permit(:date, :code, :value, :hashed_password)
     end
-    params.permit(sales: [:date, :code, :value, :hashed_password])[:sales]
   end
 
 
